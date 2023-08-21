@@ -6,7 +6,9 @@ export interface IUserRepository {
   getById(id: string): Promise<any | null>;
   //   getUsers(query: any): Promise<IUserDocument[]>;
   //   getUser(query: any): Promise<IUserDocument | null>;
+  getUserByEmail(email: string): Promise<UserDTO | null>;
   create(user: UserCreateDTO): Promise<UserDTO | null>;
   update(user: UserUpdateDTO & { _id: string }): Promise<UserDTO | null>;
   delete(id: string): Promise<UserDTO | null>;
+  comparePassword(password: string, userId: string): Promise<boolean>;
 }

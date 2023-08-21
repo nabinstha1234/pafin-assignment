@@ -30,15 +30,16 @@
  *     },
  *     "data": [
  *       {
- *         "isEmailVerified": true,
- *        "role": "user",
- *        "_id": "6044d1f52fbf64cef88e529e",
- *        "email": "user@api.com",
- *        "firstName": "User",
- *        "lastName": "Api",
- *         "createdAt": "2021-03-07T13:15:33.749Z",
- *         "updatedAt": "2021-03-07T13:15:33.749Z",
- *        "__v": 0
+ *         "_id": "0W5Q84608091R944516L26U3M",
+ *         "email": "user@api.com",
+ *         "name":"admin",
+ *         "created_at": "2023-08-22T16:57:39.453Z",
+ *         "modified_at": "2023-08-22T16:57:39.453Z",
+ *         "created_by": "0W5Q84608091R944516L26U3M",
+ *         "deleted" :false,
+ *         "deleted_at":"2023-08-22T16:57:39.453Z",
+ *         "deleted_by":"0W5Q84608091R944516L26U3M"
+ *         "__v": 0
  *       },
  *     ]
  *   }
@@ -73,15 +74,16 @@
  *    "message": "User listed successfully",
  *    "data": {
  *       {
- *         "isEmailVerified": true,
- *        "role": "user",
- *        "_id": "6044d1f52fbf64cef88e529e",
- *        "email": "user@api.com",
- *        "firstName": "User",
- *        "lastName": "Api",
- *         "createdAt": "2021-03-07T13:15:33.749Z",
- *         "updatedAt": "2021-03-07T13:15:33.749Z",
- *        "__v": 0
+ *         "_id": "0W5Q84608091R944516L26U3M",
+ *         "email": "user@api.com",
+ *         "name":"admin",
+ *         "created_at": "2023-08-22T16:57:39.453Z",
+ *         "modified_at": "2023-08-22T16:57:39.453Z",
+ *         "created_by": "0W5Q84608091R944516L26U3M",
+ *         "deleted" :false,
+ *         "deleted_at":"2023-08-22T16:57:39.453Z",
+ *         "deleted_by":"0W5Q84608091R944516L26U3M"
+ *         "__v": 0
  *       },
  *   }
  *
@@ -122,15 +124,16 @@
  *    "message": "User updated",
  *    "data": {
  *       {
- *         "isEmailVerified": true,
- *        "role": "user",
- *        "_id": "6044d1f52fbf64cef88e529e",
- *        "email": "user@api.com",
- *        "firstName": "User",
- *        "lastName": "Api",
- *         "createdAt": "2021-03-07T13:15:33.749Z",
- *         "updatedAt": "2021-03-07T13:15:33.749Z",
- *        "__v": 0
+ *         "_id": "0W5Q84608091R944516L26U3M",
+ *         "email": "user@api.com",
+ *         "name":"admin",
+ *         "created_at": "2023-08-22T16:57:39.453Z",
+ *         "modified_at": "2023-08-22T16:57:39.453Z",
+ *         "created_by": "0W5Q84608091R944516L26U3M",
+ *         "deleted" :false,
+ *         "deleted_at":"2023-08-22T16:57:39.453Z",
+ *         "deleted_by":"0W5Q84608091R944516L26U3M"
+ *         "__v": 0
  *       },
  *    }
  *  }
@@ -164,15 +167,16 @@
  *    "message": "User deleted",
  *    "data": {
  *       {
- *         "isEmailVerified": true,
- *        "role": "user",
- *        "_id": "6044d1f52fbf64cef88e529e",
- *        "email": "user@api.com",
- *        "firstName": "User",
- *        "lastName": "Api",
- *         "createdAt": "2021-03-07T13:15:33.749Z",
- *         "updatedAt": "2021-03-07T13:15:33.749Z",
- *        "__v": 0
+ *         "_id": "0W5Q84608091R944516L26U3M",
+ *         "email": "user@api.com",
+ *         "name":"admin",
+ *         "created_at": "2023-08-22T16:57:39.453Z",
+ *         "modified_at": "2023-08-22T16:57:39.453Z",
+ *         "created_by": "0W5Q84608091R944516L26U3M",
+ *         "deleted" :false,
+ *         "deleted_at":"2023-08-22T16:57:39.453Z",
+ *         "deleted_by":"0W5Q84608091R944516L26U3M"
+ *         "__v": 0
  *       },
  *    }
  *  }

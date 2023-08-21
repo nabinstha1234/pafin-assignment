@@ -66,11 +66,10 @@ export default class UserController {
 
     try {
       const args = req.body;
-
+      const _req = req as any;
       const email = args?.email;
       const password = args?.password;
       const name = args?.name;
-
       const schema = UserValidation.create();
       await this.joiService.validate({
         schema,
@@ -85,6 +84,7 @@ export default class UserController {
         email,
         password,
         name,
+        authUserId: _req?.user?._id,
       });
 
       return res.status(200).send({

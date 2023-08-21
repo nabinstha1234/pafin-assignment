@@ -79,7 +79,7 @@ export default class UserService implements IUserService {
 
   create = async (args: UserCreateDTO) => {
     const operation = 'create';
-    const { email, name, password } = args;
+    const { email, name, password, authUserId } = args;
 
     try {
       await this.dbTransaction.begin();
@@ -87,6 +87,7 @@ export default class UserService implements IUserService {
         email,
         name,
         password,
+        authUserId,
       });
       await this.dbTransaction.commit();
 

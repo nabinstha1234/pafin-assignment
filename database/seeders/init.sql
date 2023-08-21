@@ -17,15 +17,15 @@ DECLARE
 BEGIN
 	SELECT id
 	INTO STRICT
-	UserID FROM public.users WHERE username = current_setting
-	('jwt.claims.id');
+	UserID FROM public.users WHERE email = current_setting
+	('email');
 RETURN UserID;
 
 EXCEPTION
 WHEN UNDEFINED_OBJECT THEN
 RETURN (SELECT id
 FROM public.users
-WHERE username = 'admin@email.com');
+WHERE email = 'admin@email.com');
 
 WHEN NO_DATA_FOUND THEN
 RETURN (SELECT id
@@ -52,7 +52,7 @@ CREATE OR REPLACE FUNCTION public.set_modified_by_user_at_date()
   RETURNS TRIGGER AS
     $BODY$
     BEGIN
-			NEW.modified_date = NOW() AT TIME ZONE 'UTC';
+			NEW.modified_at = NOW() AT TIME ZONE 'UTC';
 			NEW.modified_by = __current_user();
     RETURN NEW;
     END;
@@ -72,7 +72,7 @@ CREATE OR REPLACE FUNCTION public.set_deleted_by_user_at_date()
     $BODY$
     BEGIN
         IF (NEW.deleted <> OLD.deleted AND NEW.deleted) THEN
-          NEW.deleted_date = NOW() AT TIME ZONE 'UTC';
+          NEW.deleted_at = NOW() AT TIME ZONE 'UTC';
     NEW.deleted_by = __current_user();
     END
     IF;
@@ -125,7 +125,7 @@ ALTER FUNCTION public.enforce_secure_pwd_storage() OWNER TO postgres;
 DROP TABLE IF EXISTS public.__creation_log;
 
 CREATE TABLE public.__creation_log(
-	created_by INTEGER NOT NULL DEFAULT __current_user(),
+	created_by Varchar(36) NOT NULL DEFAULT __current_user(),
 	created_at TIMESTAMP NOT NULL DEFAULT TIMEZONE('UTC' ::TEXT, NOW())
 )
 WITH (OIDS=FALSE);
@@ -140,7 +140,7 @@ ALTER TABLE public.__creation_log OWNER TO postgres;
 DROP TABLE IF EXISTS public.__modification_log;
 
 CREATE TABLE public.__modification_log(
-	modified_by INTEGER,
+	modified_by Varchar(36),
 	modified_at TIMESTAMP
 ) WITH (OIDS=FALSE);
 
@@ -155,7 +155,7 @@ DROP TABLE IF EXISTS public.__deletion_log;
 
 CREATE TABLE public.__deletion_log(
 	deleted BOOLEAN NOT NULL DEFAULT FALSE,
-	deleted_by INTEGER,
+	deleted_by Varchar(36),
 	deleted_at TIMESTAMP
 ) WITH (OIDS=FALSE);
 
@@ -163,22 +163,6 @@ COMMENT ON TABLE public.__deletion_log IS 'This TABLE is for inheritance use onl
 
 ALTER TABLE public.__deletion_log OWNER TO postgres;
 
-
-/*==============================================================*/
-/* TRIGGER: set_created_at                                      */
-/*==============================================================*/
-
-CREATE TRIGGER set_updated_at
-BEFORE UPDATE ON user
-FOR EACH ROW
-EXECUTE PROCEDURE set_updated_at();
-
-CREATE OR REPLACE FUNCTION set_updated_at() RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 
 /*==============================================================*/
 /* TABLE: users                                                 */
@@ -195,6 +179,7 @@ CREATE TABLE public.users(
 INHERITS (public.__creation_log, public.__modification_log, public.__deletion_log)
 WITH (OIDS=FALSE);
 
+
 ALTER TABLE public.users OWNER TO postgres;
 
 DROP TRIGGER IF EXISTS users_enforce_secure_pwd_storage on users;
@@ -203,6 +188,19 @@ CREATE TRIGGER users_enforce_secure_pwd_storage
 	BEFORE INSERT OR UPDATE OF password ON users
 	FOR EACH ROW
 	EXECUTE PROCEDURE enforce_secure_pwd_storage();
+
+/*==============================================================*/
+/* TABLE: token                                                 */
+/*==============================================================*/
+
+CREATE TABLE public.token(
+  id SERIAL NOT NULL,
+  user_id VARCHAR(36) NOT NULL,
+  token_value VARCHAR NOT NULL,
+  expiration_date TIMESTAMPTZ,
+  CONSTRAINT pk_token PRIMARY KEY (id),
+  CONSTRAINT fk_token_user_id FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
 
 insert into public.users (created_by, id, name, email, password) 
   values ('01H8C00WPEY9TDHB23P15R4ASC', '01H8C00WPEY9TDHB23P15R4ASC', 'admin', 'admin@email.com', 'admin');

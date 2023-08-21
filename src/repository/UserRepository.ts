@@ -13,23 +13,18 @@ import { IUserRepository } from '../interfaces/repository/IUserRepository';
 import { IPagingArgs, IGetAllAndCountResult } from '../interfaces/IPagination';
 import { ValidationError, NotFoundError, ConflictError } from '../utils/ApiError';
 import { IDataStoreRepository } from './DataStoreRepository';
-
-import { ILogger } from '../interfaces/ILogger';
 import { IErrorService } from '../interfaces/services/IErrorService';
 
 @injectable()
 export default class UserRepository implements IUserRepository {
   private name = 'UserRepository';
   private _dataStore: IDataStoreRepository;
-  private readonly _logger: ILogger;
   private errorService: IErrorService;
   constructor(
-    @inject(TYPES.Logger) logger: ILogger,
     @inject(TYPES.DataStore) dal: IDataStoreRepository,
     @inject(TYPES.ErrorService) errorService: IErrorService
   ) {
     this._dataStore = dal;
-    this._logger = logger;
     this.errorService = errorService;
   }
 
@@ -129,7 +124,7 @@ export default class UserRepository implements IUserRepository {
   }
 
   async create(args: any): Promise<UserDTO | null> {
-    const { email, name, password } = args;
+    const { email, name, password, authUserId } = args;
     const errors = [];
     if (isNil(email) || !isString(email)) {
       errors.push(config.translationKey.emailRequired);
@@ -160,11 +155,11 @@ export default class UserRepository implements IUserRepository {
     }
 
     const insertQuery = `
-          INSERT INTO users (id, name, password, email)
-          VALUES ($1, $2, $3, $4);
+          INSERT INTO users (id, name, password, email, created_by)
+          VALUES ($1, $2, $3, $4, $5);
         `;
     const id = ulid();
-    const insertParams = [id, name, password, email];
+    const insertParams = [id, name, password, email, authUserId];
 
     const insertResult: QueryResult = await this._dataStore.query(insertQuery, insertParams);
 
@@ -206,7 +201,12 @@ export default class UserRepository implements IUserRepository {
       };
       return userDTO;
     } catch (error) {
-      throw new Error('Error fetching user');
+      throw this.errorService.throwError({
+        err: error,
+        operation: 'getUserByEmail',
+        name: this.name,
+        logError: true,
+      });
     }
   }
 
@@ -298,6 +298,31 @@ export default class UserRepository implements IUserRepository {
       throw this.errorService.throwError({
         err: error,
         operation: 'delete',
+        name: this.name,
+        logError: true,
+      });
+    }
+  }
+
+  async comparePassword(password: string, userId: string): Promise<boolean> {
+    try {
+      const query: string = `
+           SELECT * FROM users
+           WHERE id = $1
+           AND password = crypt($2, password);`;
+      const values = [userId, password];
+
+      const result: QueryResult = await this._dataStore.query(query, values);
+
+      if (result.rowCount === 0) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      throw this.errorService.throwError({
+        err: error,
+        operation: 'comparePassword',
         name: this.name,
         logError: true,
       });

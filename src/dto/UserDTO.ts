@@ -1,5 +1,5 @@
 export class UserDTO {
-  id: number;
+  id: string;
   email: string;
   name: string;
   created_by: string;
@@ -12,6 +12,7 @@ export class UserDTO {
 }
 
 export class UserCreateDTO {
+  authUserId: string;
   email: string;
   name: string;
   password: string;

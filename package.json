@@ -12,8 +12,7 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "test": "jest",
-    "docs": "apidoc -i src/config/apidoc/ -o static/docs/",
-    "db:seed": "node ./build/config/seed/seeder.js"
+    "docs": "apidoc -i src/config/apidoc/ -o static/docs/"
   },
   "keywords": [],
   "author": "Nabin Shrestha",
