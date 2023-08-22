@@ -34,8 +34,15 @@ export default {
     english: 'en',
     japanese: 'jp',
   },
-  mongo: {
-    url: process.env.MONGO_URL || `mongodb://127.0.0.1:27017/boilerplate`,
+  dbObj: {
+    user: process.env.DBUSER || 'db_username',
+    password: process.env.DBPASSWORD || 'db_password',
+    database: process.env.DBNAME || 'db_dbname',
+    host: process.env.DBHOST || 'localhost',
+    port: 5432,
+    ssl: false,
+    max: 20,
+    idleTimeoutMillis: 10000,
   },
   roles: {
     admin: 'admin',
@@ -64,4 +71,5 @@ export default {
   events: {
     onSignUp: 'onSignUp',
   },
+  appVersion: process.env.APP_VERSION || 'v1',
 };
